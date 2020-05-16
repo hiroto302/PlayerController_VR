@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 // オキュラスクエスト用のPlayer操作スクリプト
 public class PlayerController : MonoBehaviour
 {
     Rigidbody rb;
-    private float angelSpeed = 0.4f;
-    private float moveSpeed = 2.5f;
+    private float angelSpeed = 30.0f;
+    private float moveSpeed = 2.25f;
+    // private float moveSpeed = 5.0f;
+    // 移動方向の基準オブジェクト moveTargetには、子オブジェクトのCenterEyeAnchorをアタッチ
+    [SerializeField] GameObject moveTarget;
 
     public float MoveSpeed
     {
@@ -23,17 +27,51 @@ public class PlayerController : MonoBehaviour
         float y = rightStick.y;
         // 進行方向 yをz方向へ変換
         Vector3 direction = new Vector3( x , 0, y);
-        rb.velocity = direction.z * transform.forward * moveSpeed + direction.x * transform.right * moveSpeed;
+        var move = direction.z * moveTarget.transform.forward * moveSpeed + direction.x * moveTarget.transform.right * moveSpeed;
+        // rb.velocity = direction.z * moveTarget.transform.forward * moveSpeed * Time.deltaTime + direction.x * moveTarget.transform.right * moveSpeed * Time.deltaTime;
+        rb.velocity = new Vector3( move.x, rb.velocity.y, move.z);
 
         // 左スティック操作 角度
         Vector3 leftStick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
         Vector3 angle = new Vector3( 0, leftStick.x, 0);
-        transform.Rotate(angle * angelSpeed);
+        transform.Rotate(angle * angelSpeed * Time.deltaTime);
     }
-    void Start()
+
+    public void AddForceMove()
+    {
+        // 右スティック操作 方向
+        Vector3 rightStick = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
+        float x = rightStick.x;
+        float y = rightStick.y;
+        // 進行方向 yをz方向へ変換
+        Vector3 direction = new Vector3( x , 0, y);
+        rb.AddForce(direction.z * moveTarget.transform.forward * moveSpeed + direction.x * moveTarget.transform.right * moveSpeed);
+        // rb.velocity = direction.z * moveTarget.transform.forward * moveSpeed  + direction.x * moveTarget.transform.right * moveSpeed;
+
+        // 左スティック操作 角度
+        Vector3 leftStick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
+        Vector3 angle = new Vector3( 0, leftStick.x, 0);
+        transform.Rotate(angle * angelSpeed * Time.deltaTime);
+    }
+
+    void Awake()
     {
         // Player の RigidBody取得
         rb = GetComponent<Rigidbody>();
+    }
+    void Start()
+    {
+    }
+
+    void Update()
+    {
+        // Move();
+        // AddForceMove();
+        DebugController();
+    }
+    void FixedUpdate()
+    {
+
     }
 
     // Debug用
@@ -42,11 +80,11 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.Rotate(new Vector3(0, 1.0f, 0) * angelSpeed);
+            transform.Rotate(new Vector3(0, 1.0f, 0) * angelSpeed * Time.deltaTime);
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.Rotate(new Vector3(0, -1.0f, 0) * angelSpeed);
+            transform.Rotate(new Vector3(0, -1.0f, 0) * angelSpeed * Time.deltaTime);
         }
 
         float x = 0;
@@ -67,6 +105,11 @@ public class PlayerController : MonoBehaviour
         {
             z -= 1.0f;
         }
-        rb.velocity = z * transform.forward * moveSpeed + x * transform.right * moveSpeed;
+
+        var move = z * moveTarget.transform.forward * moveSpeed  + x * moveTarget.transform.right * moveSpeed;
+        Debug.Log(move + " : move");
+
+        rb.velocity = new Vector3( move.x, rb.velocity.y, move.z);
+        // rb.AddForce(z * moveTarget.transform.forward * moveSpeed  + x * moveTarget.transform.right * moveSpeed);
     }
 }
