@@ -17,6 +17,6 @@ public class Player : MonoBehaviour
     void Update()
     {
         // playerController.Move();
-        playerController.DebugController();
+        // playerController.DebugController();
     }
 }

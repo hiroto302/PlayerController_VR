@@ -5,7 +5,7 @@ using System.Collections;
 public class PlayerController : MonoBehaviour
 {
     Rigidbody rb;
-    private float angelSpeed = 30.0f;
+    private float angleSpeed = 30.0f;
     private float moveSpeed = 2.25f;
     // private float moveSpeed = 5.0f;
     // 移動方向の基準オブジェクト moveTargetには、子オブジェクトのCenterEyeAnchorをアタッチ
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
         // 左スティック操作 角度
         Vector3 leftStick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
         Vector3 angle = new Vector3( 0, leftStick.x, 0);
-        transform.Rotate(angle * angelSpeed * Time.deltaTime);
+        transform.Rotate(angle * angleSpeed * Time.deltaTime);
     }
 
     public void AddForceMove()
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         // 左スティック操作 角度
         Vector3 leftStick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
         Vector3 angle = new Vector3( 0, leftStick.x, 0);
-        transform.Rotate(angle * angelSpeed * Time.deltaTime);
+        transform.Rotate(angle * angleSpeed * Time.deltaTime);
     }
 
     void Awake()
@@ -80,11 +80,11 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.Rotate(new Vector3(0, 1.0f, 0) * angelSpeed * Time.deltaTime);
+            transform.Rotate(new Vector3(0, 1.0f, 0) * angleSpeed * Time.deltaTime);
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.Rotate(new Vector3(0, -1.0f, 0) * angelSpeed * Time.deltaTime);
+            transform.Rotate(new Vector3(0, -1.0f, 0) * angleSpeed * Time.deltaTime);
         }
 
         float x = 0;
@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour
         }
 
         var move = z * moveTarget.transform.forward * moveSpeed  + x * moveTarget.transform.right * moveSpeed;
-        Debug.Log(move + " : move");
+        // Debug.Log(move + " : move");
 
         rb.velocity = new Vector3( move.x, rb.velocity.y, move.z);
         // rb.AddForce(z * moveTarget.transform.forward * moveSpeed  + x * moveTarget.transform.right * moveSpeed);
