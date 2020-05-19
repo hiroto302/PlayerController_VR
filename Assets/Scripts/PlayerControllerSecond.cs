@@ -33,6 +33,7 @@ public class PlayerControllerSecond : MonoBehaviour
         // x と z 軸のみの変更
         Vector3 direction = new Vector3( x , 0, y);
         move = direction.z * moveTarget.transform.forward * moveSpeed + direction.x * moveTarget.transform.right * moveSpeed;
+        rb.velocity = new Vector3( move.x, rb.velocity.y, move.z);
 
         // 左スティック操作 角度
         Vector3 leftStick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
@@ -42,11 +43,5 @@ public class PlayerControllerSecond : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.velocity = new Vector3( move.x, rb.velocity.y, move.z);
     }
-    // void LateUpdate()
-    // {
-    //     rb.velocity = new Vector3( move.x, rb.velocity.y, move.z);
-    // }
-
 }
