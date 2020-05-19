@@ -21,10 +21,6 @@ public class PlayerControllerThird : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    void Stop()
-    {
-        rb.velocity = Vector3.zero;
-    }
     void Update()
     {
         // 右スティック入力・操作 方向
@@ -45,10 +41,6 @@ public class PlayerControllerThird : MonoBehaviour
 
     void FixedUpdate()
     {
-        // if(move.x == 0 && move.z == 0)
-        // {
-        //     Stop();
-        // }
         rb.AddForce(moveForceMultiplier * (move.x - rb.velocity.x), rb.velocity.y, moveForceMultiplier * (move.z - rb.velocity.z));
     }
 }
